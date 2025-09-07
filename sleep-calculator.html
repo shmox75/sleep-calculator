@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Sleep Calculator</title>    
+</head>
+<body>
+
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <div class="slider round"></div>
+        </label>
+    </div>
+
+    <div class="container">
+        <img src="sleep.png" alt="Sleep Logo" class="logo">
+        <h1>How Much Sleep Do You Need?</h1>
+        <div class="nav-link">
+            <a href="total-sleep-calculator.html">Switch to: Total Life Sleep Calculator &rarr;</a>
+        </div>
+        <div class="input-group">
+            <label for="age">Enter your age</label>
+            <input type="number" id="age" placeholder="e.g., 30" min="0">
+        </div>
+        <button id="calculateBtn">Calculate Sleep</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const ageInput = document.getElementById('age');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultDiv = document.getElementById('result');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        /**
+         * Calculates and displays the recommended sleep duration based on age.
+         */
+        function calculateSleep() {
+            const age = parseInt(ageInput.value, 10);
+            let recommendation = '';
+            resultDiv.classList.remove('error');
+
+            if (isNaN(age) || age < 0) {
+                recommendation = 'Please enter a valid age.';
+                resultDiv.classList.add('error');
+            } else if (age <= 0) { // Newborn (0-3 months)
+                recommendation = 'Recommended sleep: <strong>14-17 hours</strong>';
+            } else if (age < 1) { // Infant (4-11 months)
+                recommendation = 'Recommended sleep: <strong>12-15 hours</strong>';
+            } else if (age <= 2) { // Toddler (1-2 years)
+                recommendation = 'Recommended sleep: <strong>11-14 hours</strong>';
+            } else if (age <= 5) { // Preschool (3-5 years)
+                recommendation = 'Recommended sleep: <strong>10-13 hours</strong>';
+            } else if (age <= 13) { // School-age (6-13 years)
+                recommendation = 'Recommended sleep: <strong>9-11 hours</strong>';
+            } else if (age <= 17) { // Teen (14-17 years)
+                recommendation = 'Recommended sleep: <strong>8-10 hours</strong>';
+            } else if (age <= 64) { // Adult (18-64 years)
+                recommendation = 'Recommended sleep: <strong>7-9 hours</strong>';
+            } else { // Older Adult (65+ years)
+                recommendation = 'Recommended sleep: <strong>7-8 hours</strong>';
+            }
+
+            resultDiv.innerHTML = recommendation;
+        }
+
+        // Event Listeners
+        calculateBtn.addEventListener('click', calculateSleep);
+
+        // Allow pressing 'Enter' in the input field to trigger calculation
+        ageInput.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                calculateSleep();
+            }
+        });
+
+        // Theme Switcher Logic
+        function setDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.checked = false;
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        themeToggle.addEventListener('change', () => {
+            setDarkMode(themeToggle.checked);
+        });
+
+        // Check for saved theme preference on page load
+        const savedTheme = localStorage.getItem('theme');
+        setDarkMode(savedTheme === 'dark');
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+    <title>Total Sleep Calculator</title>
+</head>
+<body>
+
+    <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="theme-toggle">
+            <input type="checkbox" id="theme-toggle" />
+            <div class="slider round"></div>
+        </label>
+    </div>
+
+    <div class="container">
+        <img src="sleep.png" alt="Sleep Logo" class="logo">
+        <h1>Total Sleep In Your Life</h1>
+        <div class="nav-link">
+            <a href="sleep-calculator.html">&larr; Switch to: Recommended Sleep Calculator</a>
+        </div>
+        <div class="input-group">
+            <label for="age">Your current age</label>
+            <input type="number" id="age" placeholder="e.g., 30" min="0">
+        </div>
+        <div class="input-group">
+            <label for="sleepHours">Average hours of sleep per day</label>
+            <input type="number" id="sleepHours" placeholder="e.g., 8" min="0" max="24">
+        </div>
+        <button id="calculateBtn">Calculate Total Sleep</button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const ageInput = document.getElementById('age');
+        const sleepHoursInput = document.getElementById('sleepHours');
+        const calculateBtn = document.getElementById('calculateBtn');
+        const resultDiv = document.getElementById('result');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        /**
+         * Calculates and displays the total sleep over a lifetime.
+         */
+        function calculateTotalSleep() {
+            const age = parseFloat(ageInput.value);
+            const hoursPerDay = parseFloat(sleepHoursInput.value);
+            resultDiv.classList.remove('error');
+
+            if (isNaN(age) || isNaN(hoursPerDay) || age < 0 || hoursPerDay < 0) {
+                resultDiv.innerHTML = 'Please enter a valid age and hours per day.';
+                resultDiv.classList.add('error');
+                return;
+            }
+
+            if (hoursPerDay > 24) {
+                resultDiv.innerHTML = 'Sleep hours per day cannot exceed 24.';
+                resultDiv.classList.add('error');
+                return;
+            }
+
+            // Using 365.25 to average in leap years
+            const daysInLife = age * 365.25;
+            const totalHoursSlept = daysInLife * hoursPerDay;
+            const totalDaysSlept = totalHoursSlept / 24;
+            const totalYearsSlept = totalDaysSlept / 365.25;
+
+            const years = Math.floor(totalYearsSlept);
+            const remainingDays = (totalYearsSlept - years) * 365.25;
+            const days = Math.floor(remainingDays);
+            const remainingHours = (remainingDays - days) * 24;
+            const hours = Math.round(remainingHours);
+
+            resultDiv.innerHTML = `You have spent approximately:<br>
+                <strong>${years.toLocaleString()}</strong> years, 
+                <strong>${days.toLocaleString()}</strong> days, and 
+                <strong>${hours.toLocaleString()}</strong> hours sleeping.`;
+        }
+
+        // Event Listeners
+        calculateBtn.addEventListener('click', calculateTotalSleep);
+
+        // Allow pressing 'Enter' in the input fields to trigger calculation
+        const handleEnterKey = (event) => {
+            if (event.key === 'Enter') {
+                calculateTotalSleep();
+            }
+        };
+        ageInput.addEventListener('keydown', handleEnterKey);
+        sleepHoursInput.addEventListener('keydown', handleEnterKey);
+
+        // Theme Switcher Logic
+        function setDarkMode(isDark) {
+            if (isDark) {
+                document.body.classList.add('dark-mode');
+                themeToggle.checked = true;
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.body.classList.remove('dark-mode');
+                themeToggle.checked = false;
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        themeToggle.addEventListener('change', () => {
+            setDarkMode(themeToggle.checked);
+        });
+
+        // Check for saved theme preference on page load
+        const savedTheme = localStorage.getItem('theme');
+        setDarkMode(savedTheme === 'dark');
+    </script>
+
+</body>
+</html>
