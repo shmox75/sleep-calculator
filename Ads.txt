@@ -1,5 +1,6 @@
 #Ads.txt sleep-calculator.site
 #Ads.txt managed by AdsTxtManager.com - the free ads.txt management tool for publishers
+#OK
 ownerdomain=sleep-calculator.site
 contact=directsales@ezoic.com
 managerdomain=ezoic.ai
